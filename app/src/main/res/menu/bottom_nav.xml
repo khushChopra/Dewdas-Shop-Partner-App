@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/details"
+        android:icon="@drawable/ic_store_mall_directory_black_24dp"
+        android:title="Details"
+        android:tag="details"
+        />
+    <item
+        android:id="@+id/inventory"
+        android:icon="@drawable/ic_assignment_turned_in_black_24dp"
+        android:title="Inventory"
+        android:tag="inventory"
+        />
+
+</menu>
