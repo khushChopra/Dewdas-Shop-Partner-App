@@ -36,6 +36,23 @@ public class Store {
         return storeID;
     }
 
+    @Override
+    public String toString() {
+        return "Store{" +
+                "storeID='" + storeID + '\'' +
+                ", storeName='" + storeName + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", emailID='" + emailID + '\'' +
+                ", ownerName='" + ownerName + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", description='" + description + '\'' +
+                ", photoURL='" + photoURL + '\'' +
+                ", area='" + area + '\'' +
+                ", storeItems=" + storeItems +
+                '}';
+    }
+
     public void setStoreID(String storeID) {
         this.storeID = storeID;
     }
