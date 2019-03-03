@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
         menu_inflator.inflate(R.menu.app_bar_menu,menu);
         return true;
     }
-    
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId()==R.id.logout_button){

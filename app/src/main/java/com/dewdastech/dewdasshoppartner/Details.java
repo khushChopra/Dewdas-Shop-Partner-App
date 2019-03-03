@@ -23,6 +23,8 @@ public class Details extends Fragment {
 
 
 
+
+
         return v;
     }
 
