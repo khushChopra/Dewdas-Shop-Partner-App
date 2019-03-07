@@ -4,136 +4,115 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DetailsForm">
+    tools:context=".StoreItemForm">
 
     <TextView
-        android:id="@+id/fixedTextView0"
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="StoreID = "
+        android:layout_marginStart="162dp"
+        android:layout_marginEnd="165dp"
+        android:text="Add item"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/storeIDTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toEndOf="@+id/fixedTextView0"
-        app:layout_constraintTop_toTopOf="parent" />
+        tools:layout_editor_absoluteY="3dp" />
 
     <EditText
-        android:id="@+id/storeNameEditText"
+        android:id="@+id/brandEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:hint="Enter store name"
+        android:hint="Enter Brand name"
         android:inputType="textPersonName"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fixedTextView0" />
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <EditText
-        android:id="@+id/phoneNumberEditText"
+        android:id="@+id/itemNameEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:hint="Enter phone name"
+        android:hint="Enter product name"
         android:inputType="textPersonName"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/storeNameEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/brandEditText" />
 
     <EditText
-        android:id="@+id/emailIDEditText"
+        android:id="@+id/itemDescriptionEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:hint="Enter email ID"
+        android:hint="Enter description"
         android:inputType="textPersonName"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/phoneNumberEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/itemNameEditText" />
 
     <EditText
-        android:id="@+id/ownerNameEditText"
+        android:id="@+id/itemPriceEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:hint="Enter owner name"
-        android:inputType="textPersonName"
+        android:hint="Enter price"
+        android:inputType="number"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailIDEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/itemDescriptionEditText" />
 
     <EditText
-        android:id="@+id/descriptionEditText"
+        android:id="@+id/itemStockditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:hint="Enter shop description"
-        android:inputType="textPersonName"
+        android:hint="Enter stock"
+        android:inputType="number"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ownerNameEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/itemPriceEditText" />
 
     <Button
-        android:id="@+id/placePickerButton"
+        android:id="@+id/itemPhotoButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Pick Place"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionEditText" />
-
-    <Button
-        android:id="@+id/photoButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:onClick="getImage"
+        android:onClick="itemTakePhoto"
         android:text="Take Photo"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/placePickerButton" />
+        app:layout_constraintTop_toBottomOf="@+id/itemStockditText" />
+
+    <ImageView
+        android:id="@+id/itemImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:maxHeight="220sp"
+        android:maxWidth="220sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/itemStockditText"
+        tools:srcCompat="@tools:sample/avatars[6]" />
 
     <Button
-        android:id="@+id/submitButton"
+        android:id="@+id/itemSubmitButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:onClick="detailsSubmit"
+        android:onClick="itemDetailsSubmit"
         android:text="Submit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:maxWidth="160dp"
-        android:maxHeight="160dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/photoButton"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionEditText"
-        tools:srcCompat="@tools:sample/avatars[6]" />
-
 </android.support.constraint.ConstraintLayout>

@@ -2,9 +2,7 @@ package com.dewdastech.dewdasshoppartner;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -27,28 +25,23 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class DetailsForm extends AppCompatActivity {
+public class StoreItemForm extends AppCompatActivity {
 
     // CONSTANTS
-    protected int PLACE_PICKER_REQUEST=854;
-    protected int RESULT_LOAD_IMAGE = 413;
+    protected int RESULT_LOAD_IMAGE = 4173;
 
     // Views
-    protected TextView storeIDTextView;
-    protected EditText storeNameEditText;
-    protected EditText phoneNumberEditText;
-    protected EditText emailIDEditText;
-    protected EditText ownerNameEditText;
-    protected EditText descriptionEditText;
-    protected Button placePickerButton;
-    protected Button photoButton;
-    protected Button submitButton;
-    protected ImageView imageView;
+    protected EditText itemNameEditText;
+    protected EditText itemBrandNameEditText;
+    protected EditText itemDescriptionEditText;
+    protected EditText itemPriceEditText;
+    protected EditText itemStockEditText;
+    protected Button itemPhotoButton;
+    protected Button itemSubmitButton;
+    protected ImageView itemImageView;
 
     // Firebase variables
     protected FirebaseAuth myFirebaseAuth;
@@ -64,10 +57,10 @@ public class DetailsForm extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_details_form);
+        setContentView(R.layout.activity_store_item_form);
 
-        // views initialisation
-        viewsInit();
+        // views init
+        viewsinit();
 
         // firebase init
         myMainStorageReference = FirebaseStorage.getInstance().getReference();
@@ -76,10 +69,9 @@ public class DetailsForm extends AppCompatActivity {
 
         // other variables init
         storeID = myFirebaseAuth.getCurrentUser().getUid();
-        storeIDTextView.setText(storeID);
     }
 
-    public void detailsSubmit(View v){
+    public void itemDetailsSubmit(View v){
         final ProgressDialog progress = new ProgressDialog(this);
         progress.setTitle("Loading");
         progress.setMessage("Wait while loading...");
@@ -88,7 +80,7 @@ public class DetailsForm extends AppCompatActivity {
 
         File file = new File(selectedImage.getPath());
         String imageFileName = file.getName();
-        myStorageReference = myMainStorageReference.child("shopImages/"+storeID+"/"+imageFileName);
+        myStorageReference = myMainStorageReference.child("shopImages/"+storeID+"/items/"+imageFileName);
 
         myStorageReference.putFile(selectedImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -98,31 +90,26 @@ public class DetailsForm extends AppCompatActivity {
                     public void onSuccess(Uri uri) {
                         downloadURL = uri.toString();
 
-                        Store myStore = new Store(
-                                myFirebaseAuth.getCurrentUser().getUid(),
-                                storeNameEditText.getText().toString(),
-                                phoneNumberEditText.getText().toString(),
-                                emailIDEditText.getText().toString(),
-                                ownerNameEditText.getText().toString(),
-                                0,
-                                0,
-                                descriptionEditText.getText().toString(),
+                        myDatabaseReference = myDatabaseReference.child("/storeByID/" + myFirebaseAuth.getCurrentUser().getUid()+"/items");
+
+                        String key = myDatabaseReference.push().getKey();
+
+                        StoreItem newStoreItem = new StoreItem(
+                                key,
+                                itemBrandNameEditText.getText().toString(),
+                                itemNameEditText.getText().toString(),
+                                itemDescriptionEditText.getText().toString(),
                                 downloadURL,
-                                "Empty"
+                                Integer.parseInt(itemPriceEditText.getText().toString()),
+                                Integer.parseInt(itemStockEditText.getText().toString())
                         );
 
-                        StoreDisplay myStoreDisplay = new StoreDisplay(myStore);
-
-                        Map<String, Object> childUpdates = new HashMap<>();
-                        childUpdates.put("/storeByID/" + myFirebaseAuth.getCurrentUser().getUid()+"/store",myStore);
-                        childUpdates.put("/storeByArea/" + "Empty/"+ myFirebaseAuth.getCurrentUser().getUid(), myStoreDisplay);
-
-                        myDatabaseReference.updateChildren(childUpdates).addOnSuccessListener(
+                        myDatabaseReference.child(key).setValue(newStoreItem).addOnSuccessListener(
                                 new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         progress.dismiss();
-                                        Toast.makeText(DetailsForm.this, "Success", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(StoreItemForm.this, "Success", Toast.LENGTH_SHORT).show();
                                         Intent i = new Intent(getApplicationContext(),MainActivity.class);
                                         startActivity(i);
                                     }
@@ -132,7 +119,7 @@ public class DetailsForm extends AppCompatActivity {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
                                         progress.dismiss();
-                                        Toast.makeText(DetailsForm.this, "Failure", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(StoreItemForm.this, "Failure", Toast.LENGTH_SHORT).show();
                                     }
                                 }
                         );
@@ -142,7 +129,7 @@ public class DetailsForm extends AppCompatActivity {
                             @Override
                             public void onFailure(@NonNull Exception e) {
                                 progress.dismiss();
-                                Toast.makeText(DetailsForm.this, "Failure", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(StoreItemForm.this, "Failure", Toast.LENGTH_SHORT).show();
                             }
                         }
                 );
@@ -152,15 +139,10 @@ public class DetailsForm extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         progress.dismiss();
-                        Toast.makeText(DetailsForm.this, "Failure", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(StoreItemForm.this, "Failure", Toast.LENGTH_SHORT).show();
                     }
                 }
         );
-    }
-
-    public void getImage(View v){
-        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(i,RESULT_LOAD_IMAGE);
     }
 
     @Override
@@ -170,22 +152,25 @@ public class DetailsForm extends AppCompatActivity {
         if(requestCode==RESULT_LOAD_IMAGE){
             if(resultCode==RESULT_OK && data!=null){
                 selectedImage = data.getData();
-                imageView.setImageURI(selectedImage);
+                itemImageView.setImageURI(selectedImage);
             }
         }
 
     }
 
-    private void viewsInit(){
-        storeIDTextView = findViewById(R.id.storeIDTextView);
-        storeNameEditText = findViewById(R.id.storeNameEditText);
-        phoneNumberEditText = findViewById(R.id.phoneNumberEditText);
-        emailIDEditText = findViewById(R.id.emailIDEditText);
-        ownerNameEditText = findViewById(R.id.ownerNameEditText);
-        descriptionEditText = findViewById(R.id.descriptionEditText);
-        placePickerButton = findViewById(R.id.placePickerButton);
-        photoButton = findViewById(R.id.photoButton);
-        submitButton = findViewById(R.id.submitButton);
-        imageView = findViewById(R.id.imageView);
+    public void itemTakePhoto(View v){
+        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(i,RESULT_LOAD_IMAGE);
+    }
+
+    private void viewsinit(){
+        itemBrandNameEditText = findViewById(R.id.brandEditText);
+        itemDescriptionEditText = findViewById(R.id.itemDescriptionEditText);
+        itemNameEditText = findViewById(R.id.itemNameEditText);
+        itemPriceEditText = findViewById(R.id.itemPriceEditText);
+        itemStockEditText = findViewById(R.id.itemStockditText);
+        itemPhotoButton = findViewById(R.id.itemPhotoButton);
+        itemSubmitButton = findViewById(R.id.itemSubmitButton);
+        itemImageView = findViewById(R.id.itemImageView);
     }
 }

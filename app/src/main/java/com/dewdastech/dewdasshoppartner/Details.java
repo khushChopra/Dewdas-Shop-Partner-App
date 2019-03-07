@@ -55,13 +55,11 @@ public class Details extends Fragment {
             }
         });
 
-
         // firebase init
         firebaseInit();
 
         return v;
     }
-
 
     private void firebaseInit(){
         myFirebaseAuth = FirebaseAuth.getInstance();
@@ -78,7 +76,7 @@ public class Details extends Fragment {
                     editDetailsButton.setEnabled(false);
                 }
                 else{
-                    myReference = myMainRef.child(myUser.getUid());
+                    myReference = myMainRef.child(myUser.getUid()).child("store");
                     editDetailsButton.setEnabled(true);
                     myReference.addValueEventListener(myValueEventListener);
                 }
@@ -135,5 +133,4 @@ public class Details extends Fragment {
     public Details() {
         // Required empty public constructor
     }
-
 }

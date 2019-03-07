@@ -14,6 +14,7 @@ public class StoreDisplay {
     private String photoURL;
     private String area;
 
+
     public StoreDisplay() {
     }
 

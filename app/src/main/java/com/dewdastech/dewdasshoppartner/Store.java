@@ -1,7 +1,5 @@
 package com.dewdastech.dewdasshoppartner;
 
-import java.util.List;
-
 public class Store {
     private String storeID;          //  equals owners authID
     private String storeName;
@@ -13,12 +11,11 @@ public class Store {
     private String description;
     private String photoURL;
     private String area;
-    private List<StoreItem> storeItems;
 
     public Store() {
     }
 
-    public Store(String storeID, String storeName, String phoneNumber, String emailID, String ownerName, float latitude, float longitude, String description, String photoURL, String area, List<StoreItem> storeItems) {
+    public Store(String storeID, String storeName, String phoneNumber, String emailID, String ownerName, float latitude, float longitude, String description, String photoURL, String area) {
         this.storeID = storeID;
         this.storeName = storeName;
         this.phoneNumber = phoneNumber;
@@ -29,7 +26,6 @@ public class Store {
         this.description = description;
         this.photoURL = photoURL;
         this.area = area;
-        this.storeItems = storeItems;
     }
 
     public String getStoreID() {
@@ -49,7 +45,6 @@ public class Store {
                 ", description='" + description + '\'' +
                 ", photoURL='" + photoURL + '\'' +
                 ", area='" + area + '\'' +
-                ", storeItems=" + storeItems +
                 '}';
     }
 
@@ -127,13 +122,5 @@ public class Store {
 
     public void setArea(String area) {
         this.area = area;
-    }
-
-    public List<StoreItem> getStoreItems() {
-        return storeItems;
-    }
-
-    public void setStoreItems(List<StoreItem> storeItems) {
-        this.storeItems = storeItems;
     }
 }
