@@ -44,8 +44,8 @@ public class Inventory extends Fragment {
     protected ChildEventListener myChildEventListener;
 
     // Other Variables
-    protected List<String> storeItemList = new ArrayList<String>();
-    protected ArrayAdapter<String> myArrayAdapter;
+    protected List<StoreItem> storeItemList = new ArrayList<StoreItem>();
+    protected StoreItemAdapter myArrayAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,7 +68,7 @@ public class Inventory extends Fragment {
         );
 
         // Other Variables init
-        myArrayAdapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1,storeItemList);
+        myArrayAdapter = new StoreItemAdapter(getContext(),storeItemList);
         inventoryListView.setAdapter(myArrayAdapter);
 
         // Firebase init
@@ -105,18 +105,36 @@ public class Inventory extends Fragment {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 StoreItem newStoreItem = dataSnapshot.getValue(StoreItem.class);
-                String insertValue = newStoreItem.toString();
-                myArrayAdapter.add(insertValue);
+                myArrayAdapter.add(newStoreItem);
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
+                int index =0;
+                String key = dataSnapshot.getKey();
+                while(index<storeItemList.size()){
+                    if(storeItemList.get(index).getStoreItemID().equals(key)){
+                        break;
+                    }
+                    index++;
+                }
+                storeItemList.remove(index);
+                storeItemList.add(index,dataSnapshot.getValue(StoreItem.class));
+                myArrayAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
+                int index =0;
+                String key = dataSnapshot.getKey();
+                while(index<storeItemList.size()){
+                    if(storeItemList.get(index).getStoreItemID().equals(key)){
+                        break;
+                    }
+                    index++;
+                }
+                storeItemList.remove(index);
+                myArrayAdapter.notifyDataSetChanged();
             }
 
             @Override
