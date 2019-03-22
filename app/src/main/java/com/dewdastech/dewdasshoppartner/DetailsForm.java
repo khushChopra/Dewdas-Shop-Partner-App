@@ -59,6 +59,9 @@ public class DetailsForm extends AppCompatActivity {
     // other variables
     protected Uri selectedImage;
     protected String downloadURL  = "";
+    protected float latitude=0;
+    protected float longitude=0;
+    protected String area = "Empty";
     protected String storeID;
 
     @Override
@@ -70,9 +73,7 @@ public class DetailsForm extends AppCompatActivity {
         viewsInit();
 
         // firebase init
-        myMainStorageReference = FirebaseStorage.getInstance().getReference();
-        myFirebaseAuth = FirebaseAuth.getInstance();
-        myDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        firebaseInit();
 
         // other variables init
         storeID = myFirebaseAuth.getCurrentUser().getUid();
@@ -104,18 +105,18 @@ public class DetailsForm extends AppCompatActivity {
                                 phoneNumberEditText.getText().toString(),
                                 emailIDEditText.getText().toString(),
                                 ownerNameEditText.getText().toString(),
-                                0,
-                                0,
+                                latitude,
+                                longitude,
                                 descriptionEditText.getText().toString(),
                                 downloadURL,
-                                "Empty"
+                                area
                         );
 
                         StoreDisplay myStoreDisplay = new StoreDisplay(myStore);
 
                         Map<String, Object> childUpdates = new HashMap<>();
                         childUpdates.put("/storeByID/" + myFirebaseAuth.getCurrentUser().getUid()+"/store",myStore);
-                        childUpdates.put("/storeByArea/" + "Empty/"+ myFirebaseAuth.getCurrentUser().getUid(), myStoreDisplay);
+                        childUpdates.put("/storeByArea/" + area + "/"+ myFirebaseAuth.getCurrentUser().getUid(), myStoreDisplay);
 
                         myDatabaseReference.updateChildren(childUpdates).addOnSuccessListener(
                                 new OnSuccessListener<Void>() {
@@ -163,6 +164,12 @@ public class DetailsForm extends AppCompatActivity {
         startActivityForResult(i,RESULT_LOAD_IMAGE);
     }
 
+    // Gets lat long for the store. Set latitude, longitude and area protected variables of this class. All set to default but should not be left default
+    public void getPlace(View v){
+        Intent i = new Intent(getApplicationContext(),LocationActivity.class);
+        startActivityForResult(i,PLACE_PICKER_REQUEST);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -171,6 +178,13 @@ public class DetailsForm extends AppCompatActivity {
             if(resultCode==RESULT_OK && data!=null){
                 selectedImage = data.getData();
                 imageView.setImageURI(selectedImage);
+            }
+        }
+        else if(requestCode == PLACE_PICKER_REQUEST){
+            if(requestCode == RESULT_OK && data != null){
+                latitude = data.getExtras().getFloat("latitude");
+                longitude = data.getExtras().getFloat("longitude");
+                area = data.getExtras().getString("area");
             }
         }
 
@@ -187,5 +201,11 @@ public class DetailsForm extends AppCompatActivity {
         photoButton = findViewById(R.id.photoButton);
         submitButton = findViewById(R.id.submitButton);
         imageView = findViewById(R.id.imageView);
+    }
+
+    private void firebaseInit(){
+        myMainStorageReference = FirebaseStorage.getInstance().getReference();
+        myFirebaseAuth = FirebaseAuth.getInstance();
+        myDatabaseReference = FirebaseDatabase.getInstance().getReference();
     }
 }

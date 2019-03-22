@@ -38,6 +38,7 @@ public class StoreItemForm extends AppCompatActivity {
     protected EditText itemBrandNameEditText;
     protected EditText itemDescriptionEditText;
     protected EditText itemPriceEditText;
+    protected EditText itemMRPEditText;
     protected EditText itemStockEditText;
     protected Button itemPhotoButton;
     protected Button itemSubmitButton;
@@ -100,7 +101,8 @@ public class StoreItemForm extends AppCompatActivity {
                                 itemNameEditText.getText().toString(),
                                 itemDescriptionEditText.getText().toString(),
                                 downloadURL,
-                                Integer.parseInt(itemPriceEditText.getText().toString()),
+                                Float.parseFloat(itemMRPEditText.getText().toString()),
+                                Float.parseFloat(itemPriceEditText.getText().toString()),
                                 Integer.parseInt(itemStockEditText.getText().toString())
                         );
 
@@ -170,6 +172,7 @@ public class StoreItemForm extends AppCompatActivity {
         itemPriceEditText = findViewById(R.id.itemPriceEditText);
         itemStockEditText = findViewById(R.id.itemStockditText);
         itemPhotoButton = findViewById(R.id.itemPhotoButton);
+        itemMRPEditText = findViewById(R.id.itemMRPEditText);
         itemSubmitButton = findViewById(R.id.itemSubmitButton);
         itemImageView = findViewById(R.id.itemImageView);
     }

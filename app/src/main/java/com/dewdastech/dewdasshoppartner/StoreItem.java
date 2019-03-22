@@ -6,20 +6,36 @@ public class StoreItem {
     private String name;
     private String description;
     private String photoURL;
-    private int price;
+    private float mrp;
+    private float price;
     private int stock;
 
     public StoreItem() {
     }
 
-    public StoreItem(String storeItemID, String brand, String name, String description, String photoURL, int price, int stock) {
+    @Override
+    public String toString() {
+        return "StoreItem{" +
+                "storeItemID='" + storeItemID + '\'' +
+                ", brand='" + brand + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", photoURL='" + photoURL + '\'' +
+                ", mrp=" + mrp +
+                ", price=" + price +
+                ", stock=" + stock +
+                '}';
+    }
+
+    public StoreItem(String storeItemID, String brand, String name, String description, String photoURL, float mrp, float price, int stock) {
+        this.storeItemID = storeItemID;
         this.brand = brand;
         this.name = name;
         this.description = description;
         this.photoURL = photoURL;
+        this.mrp = mrp;
         this.price = price;
         this.stock = stock;
-        this.storeItemID = storeItemID;
     }
 
     public String getStoreItemID() {
@@ -62,11 +78,19 @@ public class StoreItem {
         this.photoURL = photoURL;
     }
 
-    public int getPrice() {
+    public float getMrp() {
+        return mrp;
+    }
+
+    public void setMrp(float mrp) {
+        this.mrp = mrp;
+    }
+
+    public float getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(float price) {
         this.price = price;
     }
 
@@ -76,17 +100,5 @@ public class StoreItem {
 
     public void setStock(int stock) {
         this.stock = stock;
-    }
-
-    @Override
-    public String toString() {
-        return "StoreItem{" +
-                "brand='" + brand + '\'' +
-                ", name='" + name + '\'' +
-                ", storeItemID='" + storeItemID + '\'' +
-                ", description='" + description + '\'' +
-                ", price='" + price + '\'' +
-                ", stock=" + stock +
-                '}';
     }
 }

@@ -50,6 +50,7 @@ public class StoreItemAdapter extends ArrayAdapter<StoreItem> {
         TextView nameTextView = listItem.findViewById(R.id.nameTextView);
         TextView priceTextView = listItem.findViewById(R.id.priceTextView);
         TextView stockTextView = listItem.findViewById(R.id.stockTextView);
+        TextView mrpTextView = listItem.findViewById(R.id.mrpTextView);
         ImageView itemImageView = listItem.findViewById(R.id.itemImageView);
         Button deleteButton = listItem.findViewById(R.id.deleteButton);
         Button plusButton = listItem.findViewById(R.id.plusButton);
@@ -60,7 +61,8 @@ public class StoreItemAdapter extends ArrayAdapter<StoreItem> {
         brandTextView.setText(myItem.getBrand());
         descriptionTextView.setText(myItem.getDescription());
         nameTextView.setText(myItem.getName());
-        priceTextView.setText(Integer.toString(myItem.getPrice()));
+        priceTextView.setText(Float.toString(myItem.getPrice()));
+        mrpTextView.setText(Float.toString(myItem.getMrp()));
         stockTextView.setText(Integer.toString(myItem.getStock()));
         Glide.with(myContext).load(myItem.getPhotoURL()).into(itemImageView);
         deleteButton.setOnClickListener(

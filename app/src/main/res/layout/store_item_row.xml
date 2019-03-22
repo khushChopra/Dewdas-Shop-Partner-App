@@ -82,6 +82,31 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/textView75"
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="8dp"
+                    android:text="MRP" />
+
+                <TextView
+                    android:id="@+id/mrpTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="8dp"
+                    android:text="MRP" />
+
+            </LinearLayout>
+
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
                     android:id="@+id/textView7"
                     style="@style/Widget.AppCompat.TextView.SpinnerItem"
                     android:layout_width="match_parent"
