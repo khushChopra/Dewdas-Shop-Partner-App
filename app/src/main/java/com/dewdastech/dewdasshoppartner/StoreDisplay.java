@@ -8,8 +8,8 @@ public class StoreDisplay {
     private String phoneNumber;
     private String emailID;
     private String ownerName;
-    private float latitude;
-    private float longitude;
+    private double latitude;
+    private double longitude;
     private String description;
     private String photoURL;
     private String area;
@@ -18,7 +18,7 @@ public class StoreDisplay {
     public StoreDisplay() {
     }
 
-    public StoreDisplay(String storeID, String storeName, String phoneNumber, String emailID, String ownerName, float latitude, float longitude, String description, String photoURL, String area) {
+    public StoreDisplay(String storeID, String storeName, String phoneNumber, String emailID, String ownerName, double latitude, double longitude, String description, String photoURL, String area) {
         this.storeID = storeID;
         this.storeName = storeName;
         this.phoneNumber = phoneNumber;
@@ -84,19 +84,19 @@ public class StoreDisplay {
         this.ownerName = ownerName;
     }
 
-    public float getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(float latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
-    public float getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(float longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 

@@ -34,6 +34,7 @@ import java.util.Map;
 
 public class DetailsForm extends AppCompatActivity {
 
+    // region Variables declaration
     // CONSTANTS
     protected int PLACE_PICKER_REQUEST=854;
     protected int RESULT_LOAD_IMAGE = 413;
@@ -59,10 +60,11 @@ public class DetailsForm extends AppCompatActivity {
     // other variables
     protected Uri selectedImage;
     protected String downloadURL  = "";
-    protected float latitude=0;
-    protected float longitude=0;
+    protected double latitude=0;
+    protected double longitude=0;
     protected String area = "Empty";
     protected String storeID;
+    // endregion
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +78,7 @@ public class DetailsForm extends AppCompatActivity {
         firebaseInit();
 
         // other variables init
-        storeID = myFirebaseAuth.getCurrentUser().getUid();
-        storeIDTextView.setText(storeID);
+        variablesInit();
     }
 
     public void detailsSubmit(View v){
@@ -164,9 +165,9 @@ public class DetailsForm extends AppCompatActivity {
         startActivityForResult(i,RESULT_LOAD_IMAGE);
     }
 
-    // Gets lat long for the store. Set latitude, longitude and area protected variables of this class. All set to default but should not be left default
+    // Launches activity to get lat, long and area for the store.
     public void getPlace(View v){
-        Intent i = new Intent(getApplicationContext(),LocationActivity.class);
+        Intent i = new Intent(getApplicationContext(),MapsActivity.class);
         startActivityForResult(i,PLACE_PICKER_REQUEST);
     }
 
@@ -181,10 +182,11 @@ public class DetailsForm extends AppCompatActivity {
             }
         }
         else if(requestCode == PLACE_PICKER_REQUEST){
-            if(requestCode == RESULT_OK && data != null){
-                latitude = data.getExtras().getFloat("latitude");
-                longitude = data.getExtras().getFloat("longitude");
-                area = data.getExtras().getString("area");
+            if(resultCode == RESULT_OK && data != null){
+                latitude = data.getExtras().getDouble("latitude");
+                longitude = data.getExtras().getDouble("longitude");
+                // area = getGeoHash(latitude,longitude);          TO DO NEXT
+                Toast.makeText(getApplicationContext(), area+"is area, lat is "+latitude+"!!", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -207,5 +209,10 @@ public class DetailsForm extends AppCompatActivity {
         myMainStorageReference = FirebaseStorage.getInstance().getReference();
         myFirebaseAuth = FirebaseAuth.getInstance();
         myDatabaseReference = FirebaseDatabase.getInstance().getReference();
+    }
+
+    private void variablesInit(){
+        storeID = myFirebaseAuth.getCurrentUser().getUid();
+        storeIDTextView.setText(storeID);
     }
 }
