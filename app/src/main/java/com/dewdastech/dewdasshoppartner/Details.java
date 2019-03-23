@@ -23,9 +23,11 @@ import com.google.firebase.database.ValueEventListener;
 
 public class Details extends Fragment {
 
+    // region Variables
     // Views
     protected TextView detailsText;
     protected Button editDetailsButton;
+    protected Store currentStore = null;
 
     // Firebase variables
     protected FirebaseAuth myFirebaseAuth;
@@ -34,10 +36,10 @@ public class Details extends Fragment {
     protected DatabaseReference myMainRef;
     protected DatabaseReference myReference;
     protected ValueEventListener myValueEventListener;
+    // endregion
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_details, container, false);
 
@@ -47,7 +49,12 @@ public class Details extends Fragment {
         editDetailsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "works", Toast.LENGTH_SHORT).show();
+                // delete old storeByArea database reference
+                if(currentStore!=null){
+                    FirebaseDatabase.getInstance().getReference().child("storeByArea").child(currentStore.getArea()).child(currentStore.getStoreID()).setValue(null);
+                }
+
+                // deletes image         to implement
 
                 // take to fill details
                 Intent i = new Intent(getContext(),DetailsForm.class);
@@ -91,6 +98,7 @@ public class Details extends Fragment {
                     detailsText.setText("No data availabe");
                 }
                 else{
+                    currentStore = myStore;
                     detailsText.setText(myStore.toString());
                 }
             }

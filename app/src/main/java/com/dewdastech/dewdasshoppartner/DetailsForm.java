@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dewdastech.dewdasshoppartner.ch.hsr.geohash.GeoHash;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -185,8 +186,9 @@ public class DetailsForm extends AppCompatActivity {
             if(resultCode == RESULT_OK && data != null){
                 latitude = data.getExtras().getDouble("latitude");
                 longitude = data.getExtras().getDouble("longitude");
+                area = GeoHash.withCharacterPrecision(latitude, longitude, 5).toBase32();
                 // area = getGeoHash(latitude,longitude);          TO DO NEXT
-                Toast.makeText(getApplicationContext(), area+"is area, lat is "+latitude+"!!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), area+"- is area, lat is "+latitude+"!!", Toast.LENGTH_LONG).show();
             }
         }
 
