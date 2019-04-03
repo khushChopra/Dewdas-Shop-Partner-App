@@ -90,6 +90,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     longitude = location.getLongitude();
                     Toast.makeText(MapsActivity.this, "Long press on the location of your shop to place the marker there", Toast.LENGTH_LONG).show();
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude,longitude),14));
+                    mMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(latitude,longitude))
+                            .title("Location of shop"));
                 }
             }
         });

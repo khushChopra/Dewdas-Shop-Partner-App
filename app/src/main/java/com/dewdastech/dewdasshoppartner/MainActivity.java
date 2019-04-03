@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.zip.Inflater;
 
 public class MainActivity extends AppCompatActivity {
+
+    // region Variables
     // CONSTANTS
     protected int RC_SIGN_IN = 894;
 
@@ -43,8 +45,7 @@ public class MainActivity extends AppCompatActivity {
     protected FirebaseAuth myFirebaseAuth;
     protected FirebaseUser myUser;
     protected FirebaseAuth.AuthStateListener myListener;
-
-
+    // endregion
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +59,14 @@ public class MainActivity extends AppCompatActivity {
         firebaseInit();
 
         // initial fragment option
-        getSupportFragmentManager().beginTransaction().replace(container.getId(),new Details()).commit();
+        String directionInfo = getIntent().getStringExtra("goto");
+        if(directionInfo!=null && directionInfo.contentEquals("inventory")){
+            getSupportFragmentManager().beginTransaction().replace(container.getId(),new Inventory()).commit();
+        }
+        else{
+            getSupportFragmentManager().beginTransaction().replace(container.getId(),new Details()).commit();
+        }
+
 
         // Bottom switcher
         bottom_navigation.setOnNavigationItemSelectedListener(
@@ -97,9 +105,6 @@ public class MainActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if(firebaseAuth.getCurrentUser()==null){
                     createSignInIntent();
-                }
-                else{
-                    Toast.makeText(MainActivity.this, "Welcome", Toast.LENGTH_SHORT).show();
                 }
             }
         };

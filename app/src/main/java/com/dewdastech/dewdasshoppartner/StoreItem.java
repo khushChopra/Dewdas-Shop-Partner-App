@@ -15,16 +15,7 @@ public class StoreItem {
 
     @Override
     public String toString() {
-        return "StoreItem{" +
-                "storeItemID='" + storeItemID + '\'' +
-                ", brand='" + brand + '\'' +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", photoURL='" + photoURL + '\'' +
-                ", mrp=" + mrp +
-                ", price=" + price +
-                ", stock=" + stock +
-                '}';
+        return  brand+" "+name;
     }
 
     public StoreItem(String storeItemID, String brand, String name, String description, String photoURL, float mrp, float price, int stock) {

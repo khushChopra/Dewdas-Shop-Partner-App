@@ -1,19 +1,16 @@
 package com.dewdastech.dewdasshoppartner;
 
-
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.LayoutInflater;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,18 +20,16 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Inventory extends Fragment {
+public class SelectItemFromInventory extends AppCompatActivity {
 
     // region Variables
-    // Views
-    protected TextView inventoryTextView;
-    protected ListView inventoryListView;
-    protected Button inventoryAddButton;
+    protected EditText itemSearchEditText;
+    protected ListView searchInventoryListView;
+    protected Button addNewItemButton;
 
     // Firebase variables
     protected FirebaseAuth myFirebaseAuth;
@@ -46,36 +41,21 @@ public class Inventory extends Fragment {
 
     // Other Variables
     protected List<StoreItem> storeItemList = new ArrayList<StoreItem>();
-    protected StoreItemAdapter myArrayAdapter;
+    protected SearchStoreItemAdapter myArrayAdapter;
+
     // endregion
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_inventory, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_select_item_from_inventory);
 
-        // Views init
-        inventoryTextView = v.findViewById(R.id.inventoryTextView);
-        inventoryListView = v.findViewById(R.id.inventoryListView);
-        inventoryAddButton = v.findViewById(R.id.inventoryAddButton);
-        inventoryAddButton.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent i = new Intent(getContext(),SelectItemFromInventory.class);
-                        startActivity(i);
-                    }
-                }
-        );
+        viewsInit();
 
-        // Other Variables init
-        myArrayAdapter = new StoreItemAdapter(getContext(),storeItemList);
-        inventoryListView.setAdapter(myArrayAdapter);
+        myArrayAdapter = new SearchStoreItemAdapter(getApplicationContext(),storeItemList);
+        searchInventoryListView.setAdapter(myArrayAdapter);
 
-        // Firebase init
         firebaseInit();
-
-        return v;
     }
 
     private void firebaseInit(){
@@ -88,12 +68,9 @@ public class Inventory extends Fragment {
                 myUser = firebaseAuth.getCurrentUser();
                 if(myUser==null){
                     databaseReferenceCleanUp();
-                    inventoryTextView.setText("Not logged in");
-                    inventoryAddButton.setEnabled(false);
                 }
                 else{
                     myReference = myMainRef.child("items");
-                    inventoryAddButton.setEnabled(true);
                     storeItemList.clear();
                     myArrayAdapter.clear();
                     myReference.addChildEventListener(myChildEventListener);
@@ -178,7 +155,38 @@ public class Inventory extends Fragment {
         }
     }
 
-    public Inventory() {
-        // Required empty public constructor
+    private void viewsInit(){
+        itemSearchEditText = findViewById(R.id.itemSearchEditText);
+        searchInventoryListView = findViewById(R.id.searchInventoryListView);
+        addNewItemButton = findViewById(R.id.addNewItemButton);
+        addNewItemButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(getApplicationContext(),StoreItemForm.class);
+                        startActivity(i);
+                    }
+                }
+        );
+        itemSearchEditText.addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        searchInventoryListView.setFilterText(itemSearchEditText.getText().toString());
+                    }
+                }
+        );
     }
+
+    // TO DO Enable searching
 }

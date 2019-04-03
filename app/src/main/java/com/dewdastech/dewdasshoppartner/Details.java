@@ -57,8 +57,7 @@ public class Details extends Fragment {
                 // deletes image         to implement
 
                 // take to fill details
-                Intent i = new Intent(getContext(),DetailsForm.class);
-                startActivity(i);
+                startActivity(new Intent(getContext(),DetailsForm.class));
             }
         });
 
@@ -84,7 +83,7 @@ public class Details extends Fragment {
                 }
                 else{
                     myReference = myMainRef.child(myUser.getUid()).child("store");
-                    editDetailsButton.setEnabled(true);
+                    editDetailsButton.setEnabled(false);
                     myReference.addValueEventListener(myValueEventListener);
                 }
             }
@@ -96,10 +95,12 @@ public class Details extends Fragment {
                 Store myStore = dataSnapshot.getValue(Store.class);
                 if(myStore==null){
                     detailsText.setText("No data availabe");
+                    editDetailsButton.setEnabled(true);
                 }
                 else{
                     currentStore = myStore;
                     detailsText.setText(myStore.toString());
+                    editDetailsButton.setEnabled(true);
                 }
             }
 

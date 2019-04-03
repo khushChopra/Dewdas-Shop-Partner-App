@@ -1,13 +1,21 @@
 package com.dewdastech.dewdasshoppartner;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -27,7 +35,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,8 +47,9 @@ public class DetailsForm extends AppCompatActivity {
 
     // region Variables declaration
     // CONSTANTS
-    protected int PLACE_PICKER_REQUEST=854;
-    protected int RESULT_LOAD_IMAGE = 413;
+    protected final int PLACE_PICKER_REQUEST=854;
+    protected final int RESULT_LOAD_IMAGE = 413;
+    protected final int PERMISSION_REQUEST_CODE = 4433;
 
     // Views
     protected TextView storeIDTextView;
@@ -60,6 +71,7 @@ public class DetailsForm extends AppCompatActivity {
 
     // other variables
     protected Uri selectedImage;
+    protected Bitmap tempSelectedImageBitmap;
     protected String downloadURL  = "";
     protected double latitude=0;
     protected double longitude=0;
@@ -179,7 +191,18 @@ public class DetailsForm extends AppCompatActivity {
         if(requestCode==RESULT_LOAD_IMAGE){
             if(resultCode==RESULT_OK && data!=null){
                 selectedImage = data.getData();
-                imageView.setImageURI(selectedImage);
+                try {
+                    tempSelectedImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    // Permission is not granted
+                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},PERMISSION_REQUEST_CODE);
+                }
             }
         }
         else if(requestCode == PLACE_PICKER_REQUEST){
@@ -192,6 +215,37 @@ public class DetailsForm extends AppCompatActivity {
             }
         }
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_CODE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission granted
+                    selectedImage = getScaledImageUri(this,tempSelectedImageBitmap);
+                    imageView.setImageURI(selectedImage);
+
+                } else {
+                    // permission denied
+                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},PERMISSION_REQUEST_CODE);
+                }
+                return;
+            }
+        }
+
+    }
+
+    public Uri getScaledImageUri(Context context, Bitmap inImage) {
+        int final_length = 450;
+        int height = inImage.getHeight(), width = inImage.getWidth();
+        inImage = Bitmap.createScaledBitmap(inImage,final_length,(final_length*height)/width,true);
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
     }
 
     private void viewsInit(){
