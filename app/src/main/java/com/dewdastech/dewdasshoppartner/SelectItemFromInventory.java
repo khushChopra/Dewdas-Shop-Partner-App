@@ -182,7 +182,7 @@ public class SelectItemFromInventory extends AppCompatActivity {
 
                     @Override
                     public void afterTextChanged(Editable s) {
-                        searchInventoryListView.setFilterText(itemSearchEditText.getText().toString());
+                        SelectItemFromInventory.this.myArrayAdapter.getFilter().filter(itemSearchEditText.getText().toString());
                     }
                 }
         );

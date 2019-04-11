@@ -9,9 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -25,7 +27,16 @@ public class Details extends Fragment {
 
     // region Variables
     // Views
-    protected TextView detailsText;
+    protected TextView storeIDTextView;
+    protected TextView storeNameTextView;
+    protected TextView phoneNumberTextView;
+    protected TextView emailIDTextView;
+    protected TextView ownerNameTextView;
+    protected TextView descriptionTextView;
+    protected ImageView storeImageView;
+
+
+
     protected Button editDetailsButton;
     protected Store currentStore = null;
 
@@ -44,7 +55,14 @@ public class Details extends Fragment {
         View v = inflater.inflate(R.layout.fragment_details, container, false);
 
         // views init
-        detailsText = v.findViewById(R.id.detailsText);
+        storeIDTextView = v.findViewById(R.id.storeIDTextView);
+        storeNameTextView = v.findViewById(R.id.storeNameTextView);
+        descriptionTextView = v.findViewById(R.id.descriptionTextView);
+        ownerNameTextView = v.findViewById(R.id.ownerNameTextView);
+        phoneNumberTextView = v.findViewById(R.id.phoneNumberTextView);
+        emailIDTextView = v.findViewById(R.id.emailIDTextView);
+        storeImageView = v.findViewById(R.id.storeImageView);
+
         editDetailsButton = v.findViewById(R.id.editDetailsButton);
         editDetailsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,6 +85,21 @@ public class Details extends Fragment {
         return v;
     }
 
+    private void setStoreView(Store myStore){
+        if(myStore==null){
+            storeIDTextView.setText("No store found");
+        }
+        else{
+            storeIDTextView.setText("Store ID - "+myStore.getStoreID());
+            storeNameTextView.setText(myStore.getStoreName());
+            descriptionTextView.setText(myStore.getDescription());
+            ownerNameTextView.setText(myStore.getOwnerName());
+            phoneNumberTextView.setText(myStore.getPhoneNumber());
+            emailIDTextView.setText(myStore.getEmailID());
+            Glide.with(getContext()).load(myStore.getPhotoURL()).into(storeImageView);
+        }
+    }
+
     private void firebaseInit(){
         myFirebaseAuth = FirebaseAuth.getInstance();
         myUser = myFirebaseAuth.getCurrentUser();
@@ -78,7 +111,7 @@ public class Details extends Fragment {
 
                 if(myUser==null){
                     databaseReferenceCleanUp();
-                    detailsText.setText("Not logged in");
+                    storeIDTextView.setText("Not Logged in");
                     editDetailsButton.setEnabled(false);
                 }
                 else{
@@ -94,12 +127,12 @@ public class Details extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Store myStore = dataSnapshot.getValue(Store.class);
                 if(myStore==null){
-                    detailsText.setText("No data availabe");
+                    setStoreView(null);
                     editDetailsButton.setEnabled(true);
                 }
                 else{
                     currentStore = myStore;
-                    detailsText.setText(myStore.toString());
+                    setStoreView(myStore);
                     editDetailsButton.setEnabled(true);
                 }
             }

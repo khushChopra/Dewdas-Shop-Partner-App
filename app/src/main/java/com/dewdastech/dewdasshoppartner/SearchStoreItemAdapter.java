@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,12 +27,51 @@ import java.util.List;
 public class SearchStoreItemAdapter extends ArrayAdapter {
 
     private Context myContext;
-    private List<StoreItem> itemList= new ArrayList<>();
+    private List<StoreItem> itemList;
+    private Filter myFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults results = new FilterResults();
+            if (constraint != null && constraint.length() > 0) {
+                ArrayList<StoreItem> filterList = new ArrayList<>();
+                for (int i = 0; i < itemList.size(); i++) {
+                    if ((itemList.get(i).getBrand().toLowerCase()).contains(constraint.toString().toLowerCase()) ||
+                            (itemList.get(i).getName().toLowerCase()).contains(constraint.toString().toLowerCase())) {
+                        filterList.add(itemList.get(i));
+                    }
+                }
+                results.count = filterList.size();
+                results.values = filterList;
+            }
+            else {
+                results.count = itemList.size();
+                results.values = itemList;
+            }
+            List<StoreItem> temp = (List<StoreItem>) results.values;
+            for(StoreItem a : temp){
+                Log.i("bhaut hard",a.toString());
+            }
+            Log.i("bhaut hard",""+results.count);
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            itemList = (List<StoreItem>) results.values;
+            notifyDataSetChanged();
+        }
+    };
 
     public SearchStoreItemAdapter(@NonNull Context context, List<StoreItem> list) {
         super(context, 0, list);
         myContext = context;
         itemList = list;
+    }
+
+    @Override
+    public Filter getFilter(){
+        return myFilter;
     }
 
     @NonNull
